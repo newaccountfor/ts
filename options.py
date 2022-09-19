@@ -19,7 +19,7 @@ class MonodepthOptions:
         self.parser.add_argument("--log_dir",
                                  type=str,
                                  help="log directory",
-                                 default=os.path.join(os.getcwd(), "tmp"))
+                                 default=os.path.join("/home/inspur/MAX_SPACE/yangli/newidea-newbackbobe/", "oyxmodels"))
 
         # TRAINING options
         self.parser.add_argument("--model_name",

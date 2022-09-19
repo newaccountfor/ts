@@ -5,7 +5,6 @@ import math
 import time
 import torch
 import torch.nn.functional as F
-from torchvision.transforms.functional import hflip
 import torch.optim as optim
 from torch.utils.data import DataLoader
 import json
@@ -96,7 +95,7 @@ class Trainer:
         
         self.models["encoder"] = networks.test_hr_encoder.hrnet18(True)
         self.models["encoder"].num_ch_enc = [ 64, 18, 36, 72, 144 ]
-        self.models["fusion"] = networks.Fusion()
+        #self.models["fusion"] = networks.Fusion()
         if self.opt.auto_prtrained_model:
             self.extractor = build_extractor(50, self.opt.auto_prtrained_model)
             self.extractor.to(self.device)
@@ -123,8 +122,8 @@ class Trainer:
         
         self.models["encoder"].to(self.device)
         self.parameters_to_train += list(self.models["encoder"].parameters())
-        self.models["fusion"].to(self.device)
-        self.parameters_to_train += list(self.models["fusion"].parameters())
+        #self.models["fusion"].to(self.device)
+        #self.parameters_to_train += list(self.models["fusion"].parameters())
         self.models["depth"].to(self.device)
         self.parameters_to_train += list(self.models["depth"].parameters())
         para_sum = sum(p.numel() for p in self.models['depth'].parameters())
@@ -604,24 +603,28 @@ class Trainer:
             for i in range(inv_K.shape[0]):
                 inv_K[i, :, :] = torch.pinverse(K[i, :, :])
 
-            cam_points = self.backproject_feature(depth, inv_K)
-            pix_coords = self.project_feature(cam_points, K, T)  # [b,h,w,2]
+            #cam_points = self.backproject_feature(depth, inv_K)
+            #pix_coords = self.project_feature(cam_points, K, T)  # [b,h,w,2]
 
-            img = inputs[("color", frame_id, 0)]
-            src_f = self.extractor(img)[0]
-            outputs[("feature", frame_id, 0)] = F.grid_sample(src_f, pix_coords, padding_mode="border")
+            #img = inputs[("color", frame_id, 0)]
+            #src_f = self.extractor(img)[0]  # 这个地方取了第一维的特征，所以后面的也需要拿第一维的特征
+            #outputs[("feature", frame_id, 0)] = F.grid_sample(src_f, pix_coords, padding_mode="border")
+            outputs[("feature", frame_id, 0)] = self.extractor(outputs[("color", frame_id, 0)])[0]
 
             # only t
-            pix_coords_only_t = self.project_feature(cam_points, K, T_only_t)  # [b,h,w,2]
-            outputs[("feature_only_t", frame_id, 0)] = F.grid_sample(src_f, pix_coords_only_t, padding_mode="border")
+            #pix_coords_only_t = self.project_feature(cam_points, K, T_only_t)  # [b,h,w,2]
+            outputs[("feature_only_t", frame_id, 0)] = self.extractor(outputs[("color_only_t", frame_id, 0)])[0]
+            #outputs[("feature_only_t", frame_id, 0)] = F.grid_sample(src_f, pix_coords_only_t, padding_mode="border")
 
             # only r
-            pix_coords_only_r = self.project_feature(cam_points, K, T_only_r)  # [b,h,w,2]
-            outputs[("feature_only_r", frame_id, 0)] = F.grid_sample(src_f, pix_coords_only_r, padding_mode="border")
+            #pix_coords_only_r = self.project_feature(cam_points, K, T_only_r)  # [b,h,w,2]
+            outputs[("feature_only_r", frame_id, 0)] = self.extractor(outputs[("color_only_r", frame_id, 0)])[0]
+            #outputs[("feature_only_r", frame_id, 0)] = F.grid_sample(src_f, pix_coords_only_r, padding_mode="border")
 
             # t and r
-            pix_coords_r_and_t = self.project_feature(cam_points, K, T_r_and_t)  # [b,h,w,2]
-            outputs[("feature_r_and_t", frame_id, 0)] = F.grid_sample(src_f, pix_coords_r_and_t, padding_mode="border")
+            #pix_coords_r_and_t = self.project_feature(cam_points, K, T_r_and_t)  # [b,h,w,2]
+            outputs[("feature_r_and_t", frame_id, 0)] = self.extractor(outputs[("color_r_and_t", frame_id, 0)])[0]
+            #outputs[("feature_r_and_t", frame_id, 0)] = F.grid_sample(src_f, pix_coords_r_and_t, padding_mode="border")
             
     def robust_l1(self, pred, target):
         eps = 1e-3
@@ -652,13 +655,13 @@ class Trainer:
         losses = {}
         total_loss = 0
         visit = False
-        f_depth = self.d_decoder_s(self.d_encoder_s(inputs[("color", -1, 0)]))
+        #f_depth = self.d_decoder_s(self.d_encoder_s(inputs[("color", -1, 0)]))
         s_depth = self.d_decoder_s(self.d_encoder_s(inputs[("color", 0, 0)]))
-        t_depth = self.d_decoder_s(self.d_encoder_s(inputs[("color", 1, 0)]))
+        #t_depth = self.d_decoder_s(self.d_encoder_s(inputs[("color", 1, 0)]))
 
-        sys_frame = self.models["fusion"](inputs[("color_aug", -1, 0)], inputs[("color_aug", 0, 0)], inputs[("color_aug", 1, 0)], f_depth[("disp", 0)], s_depth[("disp", 0)], t_depth[("disp", 0)])
-        target_depth_feature_t = self.models["encoder"](sys_frame)
-        target_depth_t = self.models["depth"](target_depth_feature_t)
+        #sys_frame = self.models["fusion"](inputs[("color_aug", -1, 0)], inputs[("color_aug", 0, 0)], inputs[("color_aug", 1, 0)], f_depth[("disp", 0)], s_depth[("disp", 0)], t_depth[("disp", 0)])
+        #target_depth_feature_t = self.models["encoder"](sys_frame)
+        #target_depth_t = self.models["depth"](target_depth_feature_t)
         for scale in self.opt.scales:
             #scales=[0,1,2,3]
             loss = 0
@@ -666,7 +669,7 @@ class Trainer:
             perceptional_losses = []
 
             loss += torch.abs(outputs[("disp", scale)] - s_depth[("disp", scale)]).mean()
-            loss += torch.abs(target_depth_t[("disp", scale)] - s_depth[("disp", scale)]).mean() * 0.01
+            #loss += torch.abs(target_depth_t[("disp", scale)] - s_depth[("disp", scale)]).mean() * 0.01
             if self.opt.v1_multiscale:
                 source_scale = scale
             else:
