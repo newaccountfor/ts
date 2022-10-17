@@ -1,0 +1,20 @@
+params in encoder 9562260
+params in depth decdoer 1306840
+loading model from folder ../pretrained_models/weights_5
+Loading encoder weights...
+Loading depth weights...
+Loading pose_encoder weights...
+Loading pose weights...
+Loading Adam weights
+Training model named:
+   teacher_loss_pose
+Models and tensorboard events files are saved to:
+   /home/sda/ouyuxiang/ohhh/Teacher-Student/tmp/teacher_loss_pose/17102022-14:33:34
+Training is using:
+   cuda:0
+Using split:
+   eigen_zhou
+There are 39810 training items and 4424 validation items
+
+Threads: 1
+Training

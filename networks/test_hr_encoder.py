@@ -18,10 +18,10 @@ __all__ = ['hrnet18', 'hrnet32', 'hrnet48','hrnet64']
 #     'hrnet48_cityscapes': 'https://optgaw.dm.files.1drv.com/y4mWNpya38VArcDInoPaL7GfPMgcop92G6YRkabO1QTSWkCbo7djk8BFZ6LK_KHHIYE8wqeSAChU58NVFOZEvqFaoz392OgcyBrq_f8XGkusQep_oQsuQ7DPQCUrdLwyze_NlsyDGWot0L9agkQ-M_SfNr10ETlCF5R7BdKDZdupmcMXZc-IE3Ysw1bVHdOH4l-XEbEKFAi6ivPUbeqlYkRMQ',
 # }
 model_path = {
-    'hrnet18_imagenet': '/home/inspur/MAX_SPACE/yangli/newidea-newbackbobe/pretrained-model/hrnetv2_w18_imagenet_pretrained.pth',
-    'hrnet32_imagenet': '/home/inspur/MAX_SPACE/yangli/newidea-newbackbobe/pretrained-model/hrnetv2_w32_imagenet_pretrained.pth',
-    'hrnet48_imagenet': '/home/inspur/MAX_SPACE/yangli/newidea-newbackbobe/pretrained-model/hrnetv2_w48_imagenet_pretrained.pth',
-    'hrnet48_cityscapes': '/home/inspur/MAX_SPACE/yangli/newidea-newbackbobe/pretrained-model/hrnetv2_w48_imagenet_pretrained (1).pth'
+    'hrnet18_imagenet': '../pretrained_models/hrnetv2_w18_imagenet_pretrained.pth',
+    'hrnet32_imagenet': '../pretrained_models/hrnetv2_w32_imagenet_pretrained.pth',
+    'hrnet48_imagenet': '../pretrained_models/hrnetv2_w48_imagenet_pretrained.pth',
+    'hrnet48_cityscapes': '../pretrained_models/hrnetv2_w48_imagenet_pretrained (1).pth'
 }
 
 def visual_feature(features):

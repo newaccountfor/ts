@@ -19,7 +19,7 @@ class MonodepthOptions:
         self.parser.add_argument("--log_dir",
                                  type=str,
                                  help="log directory",
-                                 default=os.path.join("/home/inspur/MAX_SPACE/yangli/newidea-newbackbobe/", "oyxmodels"))
+                                 default=os.path.join(os.getcwd(), "tmp"))
 
         # TRAINING options
         self.parser.add_argument("--model_name",
@@ -39,7 +39,7 @@ class MonodepthOptions:
         self.parser.add_argument("--auto_prtrained_model",
                                  type=str,
                                  help="auto pretrained model",
-                                 default="/home/inspur/MAX_SPACE/yangli/newidea-newbackbobe/pretrained-model/autoencoder.pth",
+                                 default="../pretrained_models/autoencoder.pth",
                                  )
         self.parser.add_argument("--depth_encoder_decoder_fusion",
                                  type=str,
@@ -49,7 +49,7 @@ class MonodepthOptions:
         self.parser.add_argument("--depth_encoder_decoder",
                                  type=str,
                                  help="auto pretrained model",
-                                 default="/home/inspur/MAX_SPACE/yangli/newidea-newbackbobe/DIFFNet-pose-sharev1+auto+nopose-sup/tmp/weights_5/",
+                                 default="../pretrained_models/weights_17/",
                                  )
         self.parser.add_argument("--dataset",
                                  type=str,
